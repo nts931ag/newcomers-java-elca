@@ -13,7 +13,7 @@
  * agreement you entered into with ELCA.
  */
 
-package vn.elca.training.model.validator;
+package vn.elca.training.validator;
 
 import org.springframework.stereotype.Component;
 import vn.elca.training.model.entity.Task;

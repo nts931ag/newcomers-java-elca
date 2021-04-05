@@ -26,7 +26,7 @@ import vn.elca.training.model.entity.Task;
 import vn.elca.training.model.entity.TaskAudit.AuditType;
 import vn.elca.training.model.entity.TaskAudit.Status;
 import vn.elca.training.model.exception.DeadlineAfterFinishingDateException;
-import vn.elca.training.model.validator.TaskValidator;
+import vn.elca.training.validator.TaskValidator;
 import vn.elca.training.repository.TaskRepository;
 import vn.elca.training.service.AuditService;
 import vn.elca.training.service.TaskService;
