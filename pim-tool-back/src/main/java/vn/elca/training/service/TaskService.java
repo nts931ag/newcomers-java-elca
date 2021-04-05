@@ -5,7 +5,7 @@ import java.util.List;
 
 import vn.elca.training.model.entity.Project;
 import vn.elca.training.model.entity.Task;
-import vn.elca.training.model.exception.DeadlineGreaterThanProjectFinishingDateException;
+import vn.elca.training.model.exception.DeadlineAfterFinishingDateException;
 
 /**
  * @author vlp
@@ -22,7 +22,7 @@ public interface TaskService {
 
     Task getTaskById(Long id);
 
-	void updateDeadline(Long taskId, LocalDate deadline) throws DeadlineGreaterThanProjectFinishingDateException;
+	void updateDeadline(Long taskId, LocalDate deadline) throws DeadlineAfterFinishingDateException;
 
     void createTaskForProject(String taskName, LocalDate deadline, Project project);
 }

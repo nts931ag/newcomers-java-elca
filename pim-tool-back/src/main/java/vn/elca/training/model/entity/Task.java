@@ -13,14 +13,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import vn.elca.training.model.validator.TaskDeadlineValid;
 
 /**
  * @author vlp
  *
  */
 @Entity
-//@TaskDeadlineValid
 public class Task implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
