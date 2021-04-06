@@ -25,7 +25,8 @@ import vn.elca.training.model.entity.Project;
 import vn.elca.training.model.entity.Task;
 import vn.elca.training.model.entity.TaskAudit.AuditType;
 import vn.elca.training.model.entity.TaskAudit.Status;
-import vn.elca.training.model.exception.DeadlineGreaterThanProjectFinishingDateException;
+import vn.elca.training.model.exception.DeadlineAfterFinishingDateException;
+import vn.elca.training.validator.TaskValidator;
 import vn.elca.training.repository.TaskRepository;
 import vn.elca.training.service.AuditService;
 import vn.elca.training.service.TaskService;
@@ -50,6 +51,8 @@ public class TaskServiceImpl implements TaskService {
 	private TaskRepository taskRepository;
 	@Autowired
 	private AuditService auditService;
+	@Autowired
+	private TaskValidator taskValidator;
 
 	@Override
 	public List<Project> findProjectsByTaskName(String taskName) {
@@ -91,22 +94,14 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	@Override
-	public void updateDeadline(Long taskId, LocalDate deadline) throws DeadlineGreaterThanProjectFinishingDateException {
+	public void updateDeadline(Long taskId, LocalDate deadline) throws DeadlineAfterFinishingDateException {
 		Optional<Task> optional = taskRepository.findById(taskId);
 		if (optional.isPresent()) {
 			Task task = optional.get();
 			task.setDeadline(deadline);
-			validateDeadline(task);
-			taskRepository.save(task);
+			save(task);
 		}
 		// Should throw exception if not found
-	}
-
-	private void validateDeadline(Task task) throws DeadlineGreaterThanProjectFinishingDateException {
-		if (task.getProject() != null
-				&& task.getProject().getFinishingDate().isBefore(task.getDeadline())) {
-			throw new DeadlineGreaterThanProjectFinishingDateException();
-		}
 	}
 
 	@Override
@@ -115,7 +110,7 @@ public class TaskServiceImpl implements TaskService {
 		task.setDeadline(deadline);
 		AuditType auditType = AuditType.INSERT;
 		try {
-			task = taskRepository.save(task);
+			task = save(task);
 			auditService.saveAuditDataForTask(task, auditType, Status.SUCCESS, "Task was saved successfully.");
 		} catch (Exception e) {
 			String errorMessage = String.format("An exception (Error-ID = %s) happened when saving/updating task: %s",
@@ -123,5 +118,10 @@ public class TaskServiceImpl implements TaskService {
 			logger.error(errorMessage, e);
 			auditService.saveAuditDataForTask(task, auditType, Status.FAILED, errorMessage);
 		}
+	}
+
+	private Task save(Task task) throws DeadlineAfterFinishingDateException {
+		taskValidator.validate(task);
+		return taskRepository.save(task);
 	}
 }

@@ -22,7 +22,7 @@ import vn.elca.training.model.entity.QTask;
 import vn.elca.training.model.entity.QTaskAudit;
 import vn.elca.training.model.entity.Task;
 import vn.elca.training.model.entity.TaskAudit;
-import vn.elca.training.model.exception.DeadlineGreaterThanProjectFinishingDateException;
+import vn.elca.training.model.exception.DeadlineAfterFinishingDateException;
 import vn.elca.training.repository.ProjectRepository;
 import vn.elca.training.repository.TaskRepository;
 
@@ -33,7 +33,7 @@ import vn.elca.training.repository.TaskRepository;
 @ContextConfiguration(classes = {ApplicationWebConfig.class})
 @RunWith(value=SpringRunner.class)
 // please remove this annotation to do the Hibernate exercise
-//@Ignore
+@Ignore
 public class TaskServiceTest {
 	@PersistenceContext
 	private EntityManager em;
@@ -95,7 +95,7 @@ public class TaskServiceTest {
 			// test update the deadline with a new invalid deadline
 			LocalDate newDeadline = finishingDate.plusYears(2);
 			taskService.updateDeadline(taskId, newDeadline);
-		} catch (DeadlineGreaterThanProjectFinishingDateException e) {
+		} catch (DeadlineAfterFinishingDateException e) {
 			em.clear();
 			Task task1 = taskRepository.findById(taskId).orElse(null);
 			Assert.assertNotNull(task1);
