@@ -121,7 +121,9 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	private Task save(Task task) throws DeadlineAfterFinishingDateException {
+		Task result = taskRepository.save(task);
 		taskValidator.validate(task);
-		return taskRepository.save(task);
+
+		return result;
 	}
 }
