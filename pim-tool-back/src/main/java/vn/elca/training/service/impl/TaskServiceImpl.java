@@ -25,6 +25,7 @@ import vn.elca.training.model.entity.Project;
 import vn.elca.training.model.entity.Task;
 import vn.elca.training.model.entity.TaskAudit.AuditType;
 import vn.elca.training.model.entity.TaskAudit.Status;
+import vn.elca.training.model.exception.ApplicationUnexpectedException;
 import vn.elca.training.model.exception.DeadlineAfterFinishingDateException;
 import vn.elca.training.validator.TaskValidator;
 import vn.elca.training.repository.TaskRepository;
@@ -117,6 +118,8 @@ public class TaskServiceImpl implements TaskService {
 					UUID.randomUUID().toString(), e.getMessage());
 			logger.error(errorMessage, e);
 			auditService.saveAuditDataForTask(task, auditType, Status.FAILED, errorMessage);
+
+			throw new ApplicationUnexpectedException(e);
 		}
 	}
 
