@@ -42,6 +42,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public User addTasksToUser(List<Long> taskIds, String username) {
         List<Task> tasks = taskRepository.findAllById(taskIds);
         User user = findOne(username);

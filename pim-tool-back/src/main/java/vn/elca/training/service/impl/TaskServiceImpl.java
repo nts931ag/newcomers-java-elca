@@ -70,22 +70,29 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	@Override
+	@Transactional
 	public List<String> listProjectNameOfRecentTasks() {
 		List<String> projectNames = new ArrayList<>(FETCH_LIMIT);
 		List<Task> tasks = taskRepository.listRecentTasks(FETCH_LIMIT);
+
 		for (Task task : tasks) {
 			projectNames.add(task.getProject().getName());
 		}
+
 		return projectNames;
 	}
 
 	@Override
 	public List<Task> listTasksById(List<Long> ids) {
-		List<Task> tasks = new ArrayList<>(ids.size());
+		/*List<Task> tasks = new ArrayList<>(ids.size());
+
 		for (Long id : ids) {
 			tasks.add(getTaskById(id));
 		}
-		return tasks;
+
+		return tasks;*/
+
+		return taskRepository.findAllById(ids);
 	}
 
 	@Override
@@ -95,6 +102,7 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	@Override
+	@Transactional(rollbackFor = DeadlineAfterFinishingDateException.class)
 	public void updateDeadline(Long taskId, LocalDate deadline) throws DeadlineAfterFinishingDateException {
 		Optional<Task> optional = taskRepository.findById(taskId);
 		if (optional.isPresent()) {
@@ -106,6 +114,7 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	@Override
+	@Transactional
 	public void createTaskForProject(String taskName, LocalDate deadline, Project project) {
 		Task task = new Task(project, taskName);
 		task.setDeadline(deadline);

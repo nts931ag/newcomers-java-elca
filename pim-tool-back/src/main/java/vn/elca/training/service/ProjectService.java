@@ -12,4 +12,6 @@ public interface ProjectService {
     List<Project> findAll();
 
     long count();
+
+    Project maintainProjectById(Long id);
 }

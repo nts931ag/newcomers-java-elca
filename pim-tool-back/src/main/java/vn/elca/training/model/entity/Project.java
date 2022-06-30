@@ -1,14 +1,10 @@
 package vn.elca.training.model.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -27,10 +23,24 @@ public class Project {
     private LocalDate finishingDate;
 
     @Column
+    private Boolean active;
+
+    @Column
     private String customer;
 
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private Set<Task> tasks = new HashSet<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn
+    private Group group;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn
+    private User user;
+
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProjectUser> projects = new ArrayList<>();
 
     public Project() {
     }
@@ -60,6 +70,14 @@ public class Project {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 
     public LocalDate getFinishingDate() {

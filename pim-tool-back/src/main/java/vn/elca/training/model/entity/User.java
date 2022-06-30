@@ -1,16 +1,13 @@
 package vn.elca.training.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author gtn
@@ -32,7 +29,15 @@ public class User implements Serializable {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Task> tasks;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProjectUser> users = new ArrayList<>();
+
     public User() {}
+
+    public User(String username, String fullName) {
+        this.username = username;
+        this.fullName = fullName;
+    }
 
     public Long getId() {
         return id;
@@ -56,5 +61,8 @@ public class User implements Serializable {
 
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
+        for(Task task: tasks){
+            task.setUser(this);
+        }
     }
 }

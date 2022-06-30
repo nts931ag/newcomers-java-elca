@@ -25,4 +25,9 @@ public class SecondDummyProjectServiceImpl extends AbstractDummyProjectService i
         printCurrentActiveProfiles();
         throw new UnsupportedOperationException("This is second dummy service");
     }
+
+    @Override
+    public Project maintainProjectById(Long id) {
+        return null;
+    }
 }

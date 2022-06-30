@@ -1,9 +1,7 @@
 package vn.elca.training.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import vn.elca.training.model.dto.ProjectDto;
 import vn.elca.training.service.ProjectService;
 import vn.elca.training.util.ApplicationMapper;
@@ -28,5 +26,12 @@ public class ProjectController extends AbstractApplicationController {
                 .stream()
                 .map(mapper::projectToProjectDto)
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping("/search/{id}/update")
+    public ProjectDto maintainProject(@PathVariable Long id){
+        var project = projectService.maintainProjectById(id);
+
+        return mapper.projectToProjectDto(project);
     }
 }
